@@ -42,8 +42,6 @@
             padding-bottom: 0.5rem;
         }
 
-
-
         textarea {
             width: 100%;
             min-height: 400px;
@@ -160,6 +158,7 @@
 </head>
 <body>
     <div class="container">
+        <!-- Left Section: Input Data -->
         <div class="section">
             <h1>Enter Your Data</h1>
             <textarea id="inputData" placeholder="Type or paste your CV data here..."></textarea>
@@ -167,6 +166,7 @@
             <div id="statusMessage" class="status-message"></div>
         </div>
 
+        <!-- Right Section: CV Output -->
         <div class="section">
             <h1>CV Output</h1>
             <div class="cv-preview" id="cvPreview">
@@ -183,7 +183,7 @@
         const statusMessage = document.getElementById('statusMessage');
         const generateBtn = document.getElementById('generateBtn');
 
-        // Generate or retrieve session ID (hidden from user)
+        // Generate or retrieve session ID (completely hidden from user)
         function getSessionId() {
             let sessionId = localStorage.getItem('cv_session_id');
             
@@ -196,9 +196,10 @@
             return sessionId;
         }
 
-        // Initialize session ID (not displayed to user)
+        // Initialize session ID (hidden from user, only sent to webhook)
         const sessionId = getSessionId();
 
+        // Handle Generate CV button click
         generateBtn.addEventListener('click', async () => {
             const data = inputData.value.trim();
             
@@ -216,9 +217,17 @@
             await sendToWebhook(data);
         });
 
+        // Send data to n8n webhook
         async function sendToWebhook(data) {
             generateBtn.disabled = true;
             statusMessage.style.display = 'none';
+
+            // Prepare the payload with session ID (only visible in n8n)
+            const payload = {
+                sessionId: sessionId,
+                data: data,
+                timestamp: new Date().toISOString()
+            };
 
             try {
                 const response = await fetch('http://localhost:5678/webhook-test/Curriculum-vitae', {
@@ -226,11 +235,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ 
-                        sessionId: sessionId,
-                        data: data,
-                        timestamp: new Date().toISOString()
-                    })
+                    body: JSON.stringify(payload)
                 });
 
                 if (response.ok) {
@@ -254,7 +259,6 @@
                 cvPreview.innerHTML = '<div class="empty-state">Error generating CV. Please try again.</div>';
                 statusMessage.textContent = 'Error connecting to webhook. Please check your connection.';
                 statusMessage.className = 'status-message error';
-                console.error('Webhook error:', error);
             } finally {
                 statusMessage.style.display = 'block';
                 generateBtn.disabled = false;
