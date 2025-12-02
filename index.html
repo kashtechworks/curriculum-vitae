@@ -42,6 +42,8 @@
             padding-bottom: 0.5rem;
         }
 
+
+
         textarea {
             width: 100%;
             min-height: 400px;
@@ -128,6 +130,27 @@
             padding: 3rem;
         }
 
+        .loading {
+            text-align: center;
+            color: #666;
+            padding: 2rem;
+        }
+
+        .spinner {
+            border: 3px solid #333;
+            border-top: 3px solid #000;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         @media (max-width: 1024px) {
             .container {
                 grid-template-columns: 1fr;
@@ -160,8 +183,21 @@
         const statusMessage = document.getElementById('statusMessage');
         const generateBtn = document.getElementById('generateBtn');
 
-        // Generate a unique conversation ID when the page loads
-        let conversationId = 'conv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        // Generate or retrieve session ID (hidden from user)
+        function getSessionId() {
+            let sessionId = localStorage.getItem('cv_session_id');
+            
+            if (!sessionId) {
+                // Generate a new unique session ID
+                sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('cv_session_id', sessionId);
+            }
+            
+            return sessionId;
+        }
+
+        // Initialize session ID (not displayed to user)
+        const sessionId = getSessionId();
 
         generateBtn.addEventListener('click', async () => {
             const data = inputData.value.trim();
@@ -173,10 +209,10 @@
                 return;
             }
 
-            // Display the data in the CV preview
-            cvPreview.textContent = data;
+            // Show loading state
+            cvPreview.innerHTML = '<div class="loading"><div class="spinner"></div><p>Generating your CV...</p></div>';
 
-            // Send data to webhook
+            // Send data to webhook and wait for response
             await sendToWebhook(data);
         });
 
@@ -191,20 +227,32 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ 
-                        conversationId: conversationId,
+                        sessionId: sessionId,
                         data: data,
                         timestamp: new Date().toISOString()
                     })
                 });
 
                 if (response.ok) {
-                    statusMessage.textContent = 'CV data sent successfully! (ID: ' + conversationId + ')';
+                    const result = await response.json();
+                    
+                    // Display the response from webhook in CV preview
+                    if (result && result.cv) {
+                        cvPreview.textContent = result.cv;
+                    } else if (result && result.message) {
+                        cvPreview.textContent = result.message;
+                    } else {
+                        cvPreview.textContent = JSON.stringify(result, null, 2);
+                    }
+                    
+                    statusMessage.textContent = 'CV generated successfully!';
                     statusMessage.className = 'status-message success';
                 } else {
-                    throw new Error('Failed to send data');
+                    throw new Error('Failed to generate CV');
                 }
             } catch (error) {
-                statusMessage.textContent = 'Error sending data to webhook. Please check your connection.';
+                cvPreview.innerHTML = '<div class="empty-state">Error generating CV. Please try again.</div>';
+                statusMessage.textContent = 'Error connecting to webhook. Please check your connection.';
                 statusMessage.className = 'status-message error';
                 console.error('Webhook error:', error);
             } finally {
