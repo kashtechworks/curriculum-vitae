@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .section {
+            background-color: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 2rem;
+            height: fit-content;
+        }
+
+        h1 {
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #fff;
+            padding-bottom: 0.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 400px;
+            padding: 1rem;
+            background-color: #000;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #fff;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background-color: #fff;
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background-color: #ddd;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background-color: #555;
+            color: #888;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .cv-preview {
+            background-color: #fff;
+            color: #000;
+            padding: 2rem;
+            border-radius: 4px;
+            min-height: 500px;
+            white-space: pre-wrap;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+
+        .status-message {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 4px;
+            text-align: center;
+            display: none;
+        }
+
+        .status-message.success {
+            background-color: #0f5132;
+            color: #d1e7dd;
+            border: 1px solid #0f5132;
+        }
+
+        .status-message.error {
+            background-color: #5c1010;
+            color: #f8d7da;
+            border: 1px solid #5c1010;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #666;
+            padding: 3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <h1>Enter Your Data</h1>
+            <textarea id="inputData" placeholder="Type or paste your CV data here..."></textarea>
+            <button id="generateBtn">Generate CV</button>
+            <div id="statusMessage" class="status-message"></div>
+        </div>
+
+        <div class="section">
+            <h1>CV Output</h1>
+            <div class="cv-preview" id="cvPreview">
+                <div class="empty-state">
+                    Your CV will appear here after you enter data and click "Generate CV"
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const inputData = document.getElementById('inputData');
+        const cvPreview = document.getElementById('cvPreview');
+        const statusMessage = document.getElementById('statusMessage');
+        const generateBtn = document.getElementById('generateBtn');
+
+        generateBtn.addEventListener('click', async () => {
+            const data = inputData.value.trim();
+            
+            if (!data) {
+                statusMessage.textContent = 'Please enter some data first.';
+                statusMessage.className = 'status-message error';
+                statusMessage.style.display = 'block';
+                return;
+            }
+
+            // Display the data in the CV preview
+            cvPreview.textContent = data;
+
+            // Send data to webhook
+            await sendToWebhook(data);
+        });
+
+        async function sendToWebhook(data) {
+            generateBtn.disabled = true;
+            statusMessage.style.display = 'none';
+
+            try {
+                const response = await fetch('http://localhost:5678/webhook-test/Curriculum-vitae', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ data: data })
+                });
+
+                if (response.ok) {
+                    statusMessage.textContent = 'CV data sent successfully!';
+                    statusMessage.className = 'status-message success';
+                } else {
+                    throw new Error('Failed to send data');
+                }
+            } catch (error) {
+                statusMessage.textContent = 'Error sending data to webhook. Please check your connection.';
+                statusMessage.className = 'status-message error';
+                console.error('Webhook error:', error);
+            } finally {
+                statusMessage.style.display = 'block';
+                generateBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
