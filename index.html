@@ -160,6 +160,9 @@
         const statusMessage = document.getElementById('statusMessage');
         const generateBtn = document.getElementById('generateBtn');
 
+        // Generate a unique conversation ID when the page loads
+        let conversationId = 'conv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
         generateBtn.addEventListener('click', async () => {
             const data = inputData.value.trim();
             
@@ -187,11 +190,15 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ data: data })
+                    body: JSON.stringify({ 
+                        conversationId: conversationId,
+                        data: data,
+                        timestamp: new Date().toISOString()
+                    })
                 });
 
                 if (response.ok) {
-                    statusMessage.textContent = 'CV data sent successfully!';
+                    statusMessage.textContent = 'CV data sent successfully! (ID: ' + conversationId + ')';
                     statusMessage.className = 'status-message success';
                 } else {
                     throw new Error('Failed to send data');
