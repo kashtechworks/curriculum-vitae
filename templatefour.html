@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Resume Template</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Define Colors based on the template */
+        :root {
+            --primary-bg: #fdf6f2;     /* Light Peach/Pink Background */
+            --accent-color: #f7dcd1;   /* Pale Peach/Pink for Shapes/Accents */
+            --text-dark: #333333;      /* Dark Gray Text (Headings) */
+            --text-light: #555555;     /* Medium Gray Text (Body) */
+            --sidebar-color: #fcfcfc;  /* White Sidebar */
+        }
+
+        /* GLOBAL STYLES */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-bg);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .resume-container {
+            display: flex;
+            width: 850px; 
+            margin: 40px auto;
+            background-color: #ffffff;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.1); /* Softer Shadow */
+        }
+
+        /* LEFT SIDEBAR (White Background) */
+        .sidebar {
+            width: 35%;
+            background-color: var(--sidebar-color);
+            padding: 30px 20px 30px 40px;
+            color: var(--text-dark);
+        }
+
+        /* Profile Image and Border */
+        .photo-section {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 30px auto;
+            border: 5px solid var(--accent-color);
+        }
+
+        .profile-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Sidebar Contact Section */
+        .contact {
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        .contact h3, .section-sidebar h3 {
+            font-size: 1.5em; /* Larger headings */
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 30px 0 15px 0;
+            color: var(--text-dark);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .contact-item span {
+            margin-right: 15px; /* Increased spacing */
+            font-size: 1.2em;
+            color: var(--text-dark);
+        }
+
+        .contact-item p {
+            margin: 0;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Sidebar Sections (LANGUAGES, SKILLS) */
+        .section-sidebar ul, .section-sidebar p {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 10px 0;
+            font-size: 0.95em;
+            color: var(--text-light);
+        }
+
+        .section-sidebar li {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .skills ul li {
+            font-weight: 400;
+            color: var(--text-dark);
+        }
+
+        /* RIGHT MAIN CONTENT */
+        .main-content {
+            width: 65%;
+            background-color: #ffffff;
+            padding: 40px 40px 40px 20px;
+            position: relative;
+            overflow: hidden; /* Contains the shape */
+        }
+
+        /* Decorative Shape (More curvy and prominent) */
+        .decorative-shape {
+            position: absolute;
+            top: -100px; /* Moves it up */
+            right: -100px; /* Moves it right */
+            width: 400px;
+            height: 400px;
+            background-color: var(--accent-color);
+            border-radius: 50%; /* Make it rounder */
+            clip-path: ellipse(65% 65% at 50% 50%);
+            transform: rotate(10deg);
+            z-index: 0;
+            opacity: 0.7;
+        }
+
+        /* Header (Name) */
+        .header {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 40px;
+            padding-top: 10px;
+        }
+
+        .header h1 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 3.5em; /* Adjusted size */
+            font-weight: 900; /* Extra bold */
+            color: var(--text-dark);
+            text-transform: uppercase;
+            line-height: 0.9;
+            margin: 0;
+            text-align: right;
+            letter-spacing: 2px; /* Slight letter spacing to match boldness */
+        }
+
+        /* Main Content Sections */
+        .section-main {
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-main h3 {
+            font-size: 1.5em; /* Larger headings */
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 0 0 15px 0;
+            color: var(--text-dark);
+        }
+
+        /* Profile Summary */
+        .profile-summary p {
+            line-height: 1.6;
+            color: var(--text-light);
+            font-size: 0.95em;
+        }
+
+        /* Work Experience & Education List Styles */
+        .experience-item, .education-item {
+            margin-bottom: 20px;
+        }
+
+        .experience-item p.title, .education-item p.degree {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+            font-size: 1em;
+        }
+
+        .experience-item p.details, .education-item p.details {
+            font-style: normal;
+            font-size: 0.9em;
+            color: var(--text-light);
+            margin: 3px 0 5px 0;
+            font-weight: 400;
+        }
+
+        .experience-item ul {
+            list-style-type: disc; /* Explicitly use disc bullets */
+            padding-left: 20px;
+            margin: 5px 0 0 0;
+            font-size: 0.9em;
+            color: var(--text-light);
+        }
+
+        .experience-item li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        <div class="sidebar">
+            <div class="photo-section">
+                <img src="resumee-photo.jpg" alt="Profile Picture" class="profile-photo">
+            </div>
+
+            <div class="contact">
+                <h3>CONTACT</h3>
+                <div class="contact-item">
+                    <span>&#9742;</span>
+                    <p>+1 222 222 22</p>
+                </div>
+                <div class="contact-item">
+                    <span>&#9993;</span>
+                    <p>name@gmail.com</p>
+                </div>
+                <div class="contact-item">
+                    <span>&#128205;</span>
+                    <p>NY, US</p>
+                </div>
+            </div>
+
+            <div class="section-sidebar languages">
+                <h3>LANGUAGES</h3>
+                <ul>
+                    <li>English: Native</li>
+                    <li>Spanish: Intermediate</li>
+                    <li>French: Beginner</li>
+                </ul>
+            </div>
+
+            <div class="section-sidebar skills">
+                <h3>SKILLS</h3>
+                <ul>
+                    <li>Photoshop</li>
+                    <li>Illustrator</li>
+                    <li>InDesign</li>
+                    <li>Typography</li>
+                    <li>Branding</li>
+                    <li>Web & App design</li>
+                    <li>Image editing</li>
+                    <li>Video editing</li>
+                    <li>After Effects</li>
+                    <li>Communication</li>
+                    <li>Time management</li>
+                    <li>Meticulous</li>
+                    <li>Teamwork</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="decorative-shape"></div>
+
+            <header class="header">
+                <h1>SURNAME</h1>
+                <h1>NAME</h1>
+            </header>
+
+            <div class="section-main profile-summary">
+                <h3>PROFILE SUMMARY</h3>
+                <p>A highly motivated an creative graphic designer with 3 yeareans for deliverins for various clients. Seeking challengring position ut tilize ma dynamic of expertise in creating compelling visual solutions.</p>
+            </div>
+
+            <div class="section-main experiences">
+                <h3>EXPERIENCES</h3>
+                <div class="experience-item">
+                    <p class="title">Senior Graphic Designer | CreateNOW</p>
+                    <p class="details">20XX (NY, USA)</p>
+                    <ul>
+                        <li>Led a team of 3 designers to conceptualize Successfully managed multiple projects simultaneously, meeting tight deadlines.</li>
+                    </ul>
+                </div>
+                <div class="experience-item">
+                    <p class="title">Freelance Designer | Self-employed</p>
+                    <p class="details">20XX (NY, USA)</p>
+                    <ul>
+                        <li>Independently handled design projects for various local business logos posters.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section-main education">
+                <h3>EDUCATION</h3>
+                <div class="education-item">
+                    <p class="degree">Masters in design | NYU</p>
+                    <p class="details">20XX (NY, USA)</p>
+                </div>
+                <div class="education-item">
+                    <p class="degree">Bachelor of Fine Arts | NYU</p>
+                    <p class="details">20XX (NY, USA)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
