@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex Johnson - Full Stack Developer</title>
+    <style>
+        /* ===========================
+           RESET & BASE STYLES
+           =========================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1a1a1a;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        /* Dark mode */
+        body.dark-mode {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 100%);
+            color: #f8f9fa;
+        }
+
+        /* ===========================
+           HEADER
+           =========================== */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2rem 0;
+            border-bottom: 3px solid #667eea;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode header {
+            background-color: rgba(15, 12, 41, 0.95);
+            border-bottom-color: #764ba2;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-info h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-info p {
+            font-size: 0.95rem;
+            color: #666;
+            letter-spacing: 0.05em;
+        }
+
+        body.dark-mode .header-info p {
+            color: #aaa;
+        }
+
+        .nav-social {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .social-icon:hover {
+            transform: translateY(-4px) scale(1.1);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .theme-toggle {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #ffffff;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        /* ===========================
+           MAIN LAYOUT - TWO COLUMN
+           =========================== */
+        main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 2rem;
+        }
+
+        /* ===========================
+           LEFT SIDEBAR
+           =========================== */
+        .left-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .sidebar-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .sidebar-card {
+            background-color: rgba(48, 43, 99, 0.8);
+            border-left-color: #764ba2;
+            color: #f8f9fa;
+        }
+
+        .sidebar-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .sidebar-card h3 {
+            font-size: 1.3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 0.75rem;
+        }
+
+        body.dark-mode .sidebar-card h3 {
+            color: #a78bfa;
+        }
+
+        .contact-item {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .contact-label {
+            font-weight: bold;
+            color: #667eea;
+            min-width: 80px;
+        }
+
+        body.dark-mode .contact-label {
+            color: #a78bfa;
+        }
+
+        .contact-value {
+            color: #333;
+            word-break: break-word;
+        }
+
+        body.dark-mode .contact-value {
+            color: #d0d0d0;
+        }
+
+        /* ===========================
+           CENTER COLUMN
+           =========================== */
+        .center-column {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .center-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            border-top: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .center-card {
+            background-color: rgba(48, 43, 99, 0.8);
+            border-top-color: #764ba2;
+            color: #f8f9fa;
+        }
+
+        .center-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .center-card h2 {
+            font-size: 1.6rem;
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 1rem;
+        }
+
+        body.dark-mode .center-card h2 {
+            color: #a78bfa;
+            border-bottom-color: #a78bfa;
+        }
+
+        .about-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        body.dark-mode .about-text {
+            color: #d0d0d0;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #667eea;
+            background-color: rgba(102, 126, 234, 0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+        }
+
+        body.dark-mode .highlight {
+            color: #a78bfa;
+            background-color: rgba(167, 139, 250, 0.1);
+        }
+
+        /* ===========================
+           SKILLS GRID
+           =========================== */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .skill-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .skill-card {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), rgba(118, 75, 162, 0.1));
+            border-color: rgba(167, 139, 250, 0.3);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-4px);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+        }
+
+        .skill-name {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        body.dark-mode .skill-name {
+            color: #a78bfa;
+        }
+
+        .skill-bar-bg {
+            width: 100%;
+            height: 10px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        body.dark-mode .skill-bar-bg {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .skill-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* ===========================
+           RIGHT SIDEBAR
+           =========================== */
+        .right-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .achievement-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            border-right: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .achievement-card {
+            background-color: rgba(48, 43, 99, 0.8);
+            border-right-color: #764ba2;
+            color: #f8f9fa;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+        }
+
+        .achievement-card h4 {
+            font-size: 1.2rem;
+            color: #667eea;
+            margin-bottom: 0.75rem;
+        }
+
+        body.dark-mode .achievement-card h4 {
+            color: #a78bfa;
+        }
+
+        .achievement-card p {
+            font-size: 0.95rem;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        body.dark-mode .achievement-card p {
+            color: #d0d0d0;
+        }
+
+        /* ===========================
+           FOOTER
+           =========================== */
+        footer {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            text-align: center;
+            border-top: 3px solid #667eea;
+            margin-top: 3rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        body.dark-mode footer {
+            background-color: rgba(15, 12, 41, 0.95);
+            border-top-color: #764ba2;
+            color: #999;
+        }
+
+        /* ===========================
+           RESPONSIVE DESIGN
+           =========================== */
+        @media (max-width: 1024px) {
+            main {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .header-info h1 {
+                font-size: 1.5rem;
+            }
+
+            .nav-social {
+                flex-direction: column;
+                gap: 1rem;
+                width: 100%;
+            }
+
+            main {
+                padding: 0 1rem;
+            }
+
+            .sidebar-card,
+            .center-card,
+            .achievement-card {
+                padding: 1.5rem;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 1.5rem 0;
+            }
+
+            .header-info h1 {
+                font-size: 1.2rem;
+            }
+
+            .header-info p {
+                font-size: 0.8rem;
+            }
+
+            .nav-link {
+                font-size: 0.8rem;
+            }
+
+            .social-icons {
+                gap: 0.5rem;
+            }
+
+            .social-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 1rem;
+            }
+
+            .theme-toggle {
+                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
+            }
+
+            main {
+                padding: 0 1rem;
+                gap: 1rem;
+            }
+
+            .sidebar-card,
+            .center-card,
+            .achievement-card {
+                padding: 1.25rem;
+            }
+
+            .center-card h2 {
+                font-size: 1.3rem;
+            }
+
+            .about-text {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="header-content">
+            <div class="header-info">
+                <h1>ALEX JOHNSON</h1>
+                <p>Full Stack Developer | Web Architect</p>
+            </div>
+            <div class="nav-social">
+                <a href="#about" class="nav-link">ABOUT</a>
+                <a href="#skills" class="nav-link">SKILLS</a>
+                <a href="#contact" class="nav-link">CONTACT</a>
+                <div class="social-icons">
+                    <a href="https://linkedin.com" class="social-icon" title="LinkedIn">in</a>
+                    <a href="https://github.com" class="social-icon" title="GitHub">⚙</a>
+                    <a href="https://twitter.com" class="social-icon" title="Twitter">𝕏</a>
+                    <a href="mailto:alex@example.com" class="social-icon" title="Email">✉</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle">DARK</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN THREE-COLUMN LAYOUT -->
+    <main>
+        <!-- LEFT SIDEBAR -->
+        <aside class="left-sidebar">
+            <!-- Contact Information -->
+            <div class="sidebar-card" id="contact">
+                <h3>[ CONTACT ]</h3>
+                <div class="contact-item">
+                    <span class="contact-label">Email:</span>
+                    <span class="contact-value">alex@example.com</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">Phone:</span>
+                    <span class="contact-value">+1 (555) 123-4567</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">Location:</span>
+                    <span class="contact-value">San Francisco, CA</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">Website:</span>
+                    <span class="contact-value">alexjohnson.dev</span>
+                </div>
+            </div>
+
+            <!-- Languages -->
+            <div class="sidebar-card">
+                <h3>[ LANGUAGES ]</h3>
+                <div class="contact-item">
+                    <span class="contact-label">English:</span>
+                    <span class="contact-value">Native</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">Spanish:</span>
+                    <span class="contact-value">Fluent</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">French:</span>
+                    <span class="contact-value">Intermediate</span>
+                </div>
+            </div>
+
+            <!-- Certifications -->
+            <div class="sidebar-card">
+                <h3>[ CERTIFICATIONS ]</h3>
+                <div class="contact-item">
+                    <span class="contact-value">AWS Solutions Architect</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-value">Google Cloud Professional</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-value">SCRUM Master Certified</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CENTER COLUMN -->
+        <section class="center-column">
+            <!-- About Me -->
+            <div class="center-card" id="about">
+                <h2>[ ABOUT ME ]</h2>
+                <p class="about-text">
+                    I'm a passionate <span class="highlight">Full Stack Developer</span> with 8+ years of experience 
+                    building scalable web applications and crafting exceptional digital experiences. My expertise spans 
+                    modern JavaScript frameworks, responsive design, and backend architecture.
+                </p>
+                <p class="about-text">
+                    I thrive in collaborative environments where innovation meets <span class="highlight">clean code</span>. 
+                    My core strengths include performance optimization, system design, and mentoring junior developers. 
+                    I'm committed to staying current with emerging technologies and best practices.
+                </p>
+            </div>
+
+            <!-- Skills -->
+            <div class="center-card" id="skills">
+                <h2>[ TECHNICAL SKILLS ]</h2>
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <div class="skill-name">HTML5</div>
+                        <div class="skill-bar-bg">
+                            <div class="skill-bar-fill" data-target="95"></div>
+                        </div>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-name">CSS3 & SCSS</div>
+                        <div class="skill-bar-bg">
+                            <div class="skill-bar-fill" data-target="90"></div>
+                        </div>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-name">JavaScript (ES6+)</div>
+                        <div class="skill-bar-bg">
+                            <div class="skill-bar-fill" data-target="92"></div>
+                        </div>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-name">React.js</div>
+                        <div class="skill-bar-bg">
+                            <div class="skill-bar-fill" data-target="88"></div>
+                        </div>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-name">Node.js & Express</div>
+                        <div class="skill-bar-bg">
+                            <div class="skill-bar-fill" data-target="85"></div>
+                        </div>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-name">MongoDB & SQL</div>
+                        <div class="skill-bar-bg">
+                            <div class="skill-bar-fill" data-target="87"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RIGHT SIDEBAR -->
+        <aside class="right-sidebar">
+            <!-- Key Achievements -->
+            <div class="achievement-card">
+                <h4>📊 Key Achievement</h4>
+                <p>Led a team of 5 developers to deliver a high-traffic e-commerce platform serving 100K+ daily users with 99.9% uptime.</p>
+            </div>
+
+            <!-- Experience -->
+            <div class="achievement-card">
+                <h4>💼 Experience</h4>
+                <p><strong>Senior Developer</strong> at TechCorp (2020-Present): Building scalable cloud solutions.</p>
+                <p><strong>Mid-level Developer</strong> at StartupXYZ (2017-2020): Full-stack web development.</p>
+            </div>
+
+            <!-- Education -->
+            <div class="achievement-card">
+                <h4>🎓 Education</h4>
+                <p><strong>B.S. Computer Science</strong> - Stanford University</p>
+                <p><strong>Advanced Bootcamp</strong> - Full Stack Web Development</p>
+            </div>
+
+            <!-- Key Strengths -->
+            <div class="achievement-card">
+                <h4>⭐ Key Strengths</h4>
+                <p>• Problem Solving<br>
+                • Leadership<br>
+                • Clean Code<br>
+                • Mentoring<br>
+                • Innovation</p>
+            </div>
+        </aside>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2025 Alex Johnson. Crafted with code and coffee.</p>
+    </footer>
+
+    <script>
+        // ===========================
+        // SMOOTH SCROLLING
+        // ===========================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+
+        // ===========================
+        // SKILL BAR ANIMATION
+        // ===========================
+        const animateSkillBars = () => {
+            const skillBars = document.querySelectorAll('.skill-bar-fill');
+            const skillsSection = document.getElementById('skills');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                        skillBars.forEach(bar => {
+                            if (!bar.classList.contains('animated')) {
+                                const target = bar.getAttribute('data-target');
+                                bar.style.width = target + '%';
+                                bar.classList.add('animated');
+                            }
+                        });
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            observer.observe(skillsSection);
+        };
+
+        animateSkillBars();
+
+        // ===========================
+        // DARK MODE TOGGLE
+        // ===========================
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeToggle.textContent = 'LIGHT';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                themeToggle.textContent = 'LIGHT';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeToggle.textContent = 'DARK';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+</body>
+</html>
